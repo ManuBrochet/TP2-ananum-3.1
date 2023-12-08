@@ -49,10 +49,46 @@ def diagImg(x,ddata):
 def produitImg(x,ddata):
     mask,regu,Nx,Ny = ddata
     xxImg = x.reshape(Nx,Ny)
+    N = Nx*Ny
     
-    #euhhh pas sûr
-    newImg[0:N] = mask[0:N,0:N]*x[0:N]
-    newImg[]
+    newImg = np.zeros(np.shape(xxImg))
+
+    # l'intérieur de la matrice 
+    newImg[1:Nx-1, 1:Ny-1] = mask[1:Nx-1, 1:Ny-1]*xxImg[1:Nx-1, 1:Ny-1] + regu*(4*xxImg[1:Nx-1, 1:Ny-1]\
+        - xxImg[:Nx-2, 1:Ny-1] - xxImg[1:Nx-1, :Ny-2] - xxImg[2:Nx, 1:Ny-1] - xxImg[1:Nx-1, 2:Ny])
+
+    # la ligne l=0 (sans les coins)
+    newImg[0,1:Ny-1] = mask[0,1:Ny-1]*xxImg[0,1:Ny-1] + regu*(4*xxImg[0,1:Ny-1]\
+        - xxImg[0, 2:Ny] - xxImg[1, 1:Ny-1] - xxImg[0, 0:Ny-2])
+
+    # la ligne l=Nx (sans les coins)
+    newImg[Nx-1,1:Ny-1] = mask[Nx-1,1:Ny-1]*xxImg[Nx-1,1:Ny-1] + regu*(4*xxImg[Nx-1,1:Ny-1]\
+        - xxImg[Nx-1, 2:Ny] - xxImg[Nx-2, 1:Ny-1] - xxImg[Nx-1, 0:Ny-2])
+
+    # la colonne c=0 (sans les coins)
+    newImg[1:Nx-1,0] = mask[1:Nx-1,0]*xxImg[1:Nx-1,0] + regu*(4*xxImg[1:Nx-1,0] \
+        - xxImg[1:Nx-1,1]  - xxImg[0:Nx-2,0]  - xxImg[2:Nx, 0])
+
+    #la colonne c=Ny (sans les coins)
+    newImg[1:Nx-1,Ny-1] = mask[1:Nx-1,Ny-1]*xxImg[1:Nx-1,Ny-1] + regu*(4*xxImg[1:Nx-1,Ny-1] \
+        - xxImg[1:Nx-1,Ny-2]  - xxImg[0:Nx-2,Ny-1]  - xxImg[2:Nx, Ny-1])
+
+    # Les coins
+    newImg[0,0] = mask[0,0]*xxImg[0,0] + regu*(4*xxImg[0,0] \
+        - xxImg[0,1]  - xxImg[1,0])
+
+    newImg[Nx-1 , Ny-1] = mask[Nx-1 , Ny-1]*xxImg[Nx-1 , Ny-1] + regu*(4*xxImg[Nx-1 , Ny-1] \
+        - xxImg[Nx -2 , Ny-1]  - xxImg[Nx-1 , Ny-2])
+
+    newImg[0 , Ny-1] = mask[0 , Ny-1]*xxImg[0 , Ny-1] + regu*(4*xxImg[0 , Ny-1] \
+        - xxImg[1 , Ny-1]  - xxImg[0 , Ny-2])
+
+    newImg[Nx-1 , 0] = mask[Nx-1 , 0]*xxImg[Nx-1 , 0] + regu*(4*xxImg[Nx-1 , 0] \
+        - xxImg[Nx -2 , 0]  - xxImg[Nx-1 , 1])
+
+    
+    
+
 
     
     return newImg.reshape(-1)  
@@ -63,6 +99,7 @@ def produitImg(x,ddata):
 def laplace(img):
     imgres = img*4.0 # Ici img est une matrice de taille Nx x Ny
     # Completer ICI :
+
     # ... 
     return imgres
 ####################################################          
