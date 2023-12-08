@@ -8,8 +8,8 @@ def produit1(x,ddata):
     alpha,h = ddata
     prodx = x * 0.0
 
-    for i in range(1,len(x)-1):
-        prodx[i] = x[i] * (2+alpha*(h**2)) - x[i-1] - x[i+1]
+        
+    prodx[1:len(x)-1] = x[1:len(x)-1] * (2+alpha*(h**2)) - x[0:len(x)-2] - x[2:len(x)]
 
     prodx[0] = x[0] * (2+alpha*(h**2)) - x[1]
     prodx[len(x)-1] = x[len(x)-1] * (2+alpha*(h**2)) - x[len(x)-2]
@@ -49,8 +49,11 @@ def diagImg(x,ddata):
 def produitImg(x,ddata):
     mask,regu,Nx,Ny = ddata
     xxImg = x.reshape(Nx,Ny)
-    # Completer ICI :
-    # ...
+    
+    #euhhh pas sûr
+    newImg[0:N] = mask[0:N,0:N]*x[0:N]
+    newImg[]
+
     
     return newImg.reshape(-1)  
 ####################################################      

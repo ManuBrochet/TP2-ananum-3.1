@@ -17,11 +17,13 @@ def CG(produitAx, x0, bb, ddata, iteMax, eps):
     while(residus[-1] >= eps*eps*residus[0] and iteMax > ite):
         print("Ite : ",ite," / ",iteMax,", residu : ",residus[-1]/residus[0])
         
-        z = np.dot(r,w)/np.dot(produitAx(w,ddata),w)
-        x -= z*w
-        r -= z*produitAx(w,ddata)
+        z = np.dot(r,w) / np.dot(produitAx(w,ddata),w)
+        x = x - z*w
+        r = r - z*produitAx(w,ddata)
         L = np.dot(produitAx(r,ddata),w) / np.dot(produitAx(w,ddata),w)
-        w -= L*w 
+        w = r - L*w
+        print("z = ", z, "L = ", L)
+
         residus.append(np.dot(r,r))
         #c'est bon jusque là
         ite += 1
@@ -36,14 +38,14 @@ def DescenteGrad(produitAx, x0, bb, ddata, iteMax, eps):
     residus = [np.dot(r,r)]
     ite = 1
     x = np.copy(x0)
-    valPropre,_ = np.linalg.eigh(ddata)
     #comment trouver le pas optimale ?
-    pas = 2/(valPropre[0]+valPropre[-1])
     # Debut itérations :
     while(residus[-1] >= eps*eps*residus[0] and iteMax > ite):
         print("Ite : ",ite," / ",iteMax,", residu : ",residus[-1]/residus[0])
         
-        x -= pas*r
+        alpha = np.dot(r,r)/np.dot(produitAx(r, ddata),r)
+
+        x -= alpha*r
 
         r = produitAx(x, ddata) - bb
         
